@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
 import pl.kukla.krzys.msscbeerorderservice.domain.OrderStatusEnum;
+import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.repository.CustomerRepository;
 import pl.kukla.krzys.msscbeerorderservice.web.mapper.BeerOrderMapper;
@@ -44,46 +45,40 @@ public class BeerOrderServiceImpl implements BeerOrderService {
 
     @Override
     public BeerOrderPagedList listOrders(UUID customerId, Pageable pageable) {
-        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        Customer customer = customerRepository.findById(customerId)
+            .orElseThrow(() -> new NotFoundException("Cannot find customer with id->" + customerId.toString()));
 
-        if (customerOptional.isPresent()) {
-            Page<BeerOrder> beerOrderPage =
-                beerOrderRepository.findAllByCustomer(customerOptional.get(), pageable);
+        Page<BeerOrder> beerOrderPage =
+            beerOrderRepository.findAllByCustomer(customer, pageable);
 
-            return new BeerOrderPagedList(beerOrderPage
-                .stream()
-                .map(beerOrderMapper::beerOrderToDto)
-                .collect(Collectors.toList()), PageRequest.of(
-                beerOrderPage.getPageable().getPageNumber(),
-                beerOrderPage.getPageable().getPageSize()),
-                beerOrderPage.getTotalElements());
-        } else {
-            return null;
-        }
+        return new BeerOrderPagedList(beerOrderPage
+            .stream()
+            .map(beerOrderMapper::beerOrderToDto)
+            .collect(Collectors.toList()), PageRequest.of(
+            beerOrderPage.getPageable().getPageNumber(),
+            beerOrderPage.getPageable().getPageSize()),
+            beerOrderPage.getTotalElements());
     }
 
     @Transactional
     @Override
     public BeerOrderDto placeOrder(UUID customerId, BeerOrderDto beerOrderDto) {
-        Optional<Customer> customerOptional = customerRepository.findById(customerId);
+        Customer customer = customerRepository.findById(customerId)
+            .orElseThrow(() -> new NotFoundException("Cannot find customer with id->" + customerId.toString()));
 
-        if (customerOptional.isPresent()) {
-            BeerOrder beerOrder = beerOrderMapper.dtoToBeerOrder(beerOrderDto);
-            beerOrder.setId(null); //should not be set by outside client
-            beerOrder.setCustomer(customerOptional.get());
-            beerOrder.setOrderStatus(OrderStatusEnum.NEW);
-            beerOrder.getBeerOrderLines().forEach(line -> line.setBeerOrder(beerOrder));
-            BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
+        BeerOrder beerOrder = beerOrderMapper.dtoToBeerOrder(beerOrderDto);
+        beerOrder.setId(null); //should not be set by outside client
+        beerOrder.setCustomer(customer);
+        beerOrder.setOrderStatus(OrderStatusEnum.NEW);
+        beerOrder.getBeerOrderLines().forEach(line -> line.setBeerOrder(beerOrder));
+        BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
 
-            log.debug("Saved Beer Order: " + beerOrder.getId());
+        log.debug("Saved Beer Order: " + beerOrder.getId());
 
-            //todo impl
-            //  publisher.publishEvent(new NewBeerOrderEvent(savedBeerOrder));
+        //todo impl
+        //  publisher.publishEvent(new NewBeerOrderEvent(savedBeerOrder));
 
-            return beerOrderMapper.beerOrderToDto(savedBeerOrder);
-        }
-        //todo add exception type
-        throw new RuntimeException("Customer Not Found");
+        return beerOrderMapper.beerOrderToDto(savedBeerOrder);
     }
 
     @Override

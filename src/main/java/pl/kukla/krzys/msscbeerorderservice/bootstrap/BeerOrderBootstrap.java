@@ -1,6 +1,7 @@
 package pl.kukla.krzys.msscbeerorderservice.bootstrap;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
@@ -11,6 +12,7 @@ import java.util.UUID;
 /**
  * @author Krzysztof Kukla
  */
+@Slf4j
 @RequiredArgsConstructor
 @Component
 public class BeerOrderBootstrap implements CommandLineRunner {
@@ -28,10 +30,12 @@ public class BeerOrderBootstrap implements CommandLineRunner {
 
     private void loadCustomerData() {
         if (customerRepository.count() == 0) {
-            customerRepository.save(Customer.builder()
+            Customer savedCustomer = customerRepository.save(Customer.builder()
                 .customerName(TASTING_ROOM)
                 .apiKey(UUID.randomUUID())
                 .build());
+
+            log.debug("Tasting room customer Id: " + savedCustomer.getId().toString());
         }
     }
 

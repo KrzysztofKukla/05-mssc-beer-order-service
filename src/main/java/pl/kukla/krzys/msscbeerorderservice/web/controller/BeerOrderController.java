@@ -21,7 +21,7 @@ import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderPagedList;
 
 import java.util.UUID;
 
-@RequestMapping("/api/v1/customers/{customerId}/")
+@RequestMapping("/api/v1/customers/{customerId}")
 @RestController
 public class BeerOrderController {
 
@@ -34,7 +34,7 @@ public class BeerOrderController {
         this.beerOrderService = beerOrderService;
     }
 
-    @GetMapping("orders")
+    @GetMapping("/orders")
     public BeerOrderPagedList listOrders(@PathVariable("customerId") UUID customerId,
                                          @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                          @RequestParam(value = "pageSize", required = false) Integer pageSize) {
@@ -50,13 +50,13 @@ public class BeerOrderController {
         return beerOrderService.listOrders(customerId, PageRequest.of(pageNumber, pageSize));
     }
 
-    @PostMapping("orders")
+    @PostMapping("/orders")
     @ResponseStatus(HttpStatus.CREATED)
     public BeerOrderDto placeOrder(@PathVariable("customerId") UUID customerId, @RequestBody BeerOrderDto beerOrderDto) {
         return beerOrderService.placeOrder(customerId, beerOrderDto);
     }
 
-    @GetMapping("orders/{orderId}")
+    @GetMapping("/orders/{orderId}")
     public BeerOrderDto getOrder(@PathVariable("customerId") UUID customerId, @PathVariable("orderId") UUID orderId) {
         return beerOrderService.getOrderById(customerId, orderId);
     }
