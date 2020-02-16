@@ -4,11 +4,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>pl.kukla.krzys</groupId>
-		<artifactId>07-brewery-bom</artifactId>
-		<version>1.0-SNAPSHOT</version>
+		<groupId>com.github.sfg-beer-works</groupId>
+		<artifactId>sfg-brewery-bom</artifactId>
+		<version>1.0.11</version>
 	</parent>
 
+	<groupId>pl.kukla.krzys</groupId>
 	<artifactId>05-mssc-beer-order-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
