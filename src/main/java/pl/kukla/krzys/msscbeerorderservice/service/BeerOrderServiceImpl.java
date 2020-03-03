@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
-import pl.kukla.krzys.msscbeerorderservice.domain.OrderStatusEnum;
+import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
 import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.repository.CustomerRepository;
@@ -69,7 +69,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
         BeerOrder beerOrder = beerOrderMapper.dtoToBeerOrder(beerOrderDto);
         beerOrder.setId(null); //should not be set by outside client
         beerOrder.setCustomer(customer);
-        beerOrder.setOrderStatus(OrderStatusEnum.NEW);
+        beerOrder.setOrderStatus(BeerOrderStatusEnum.NEW);
         beerOrder.getBeerOrderLines().forEach(line -> line.setBeerOrder(beerOrder));
         BeerOrder savedBeerOrder = beerOrderRepository.saveAndFlush(beerOrder);
 
@@ -89,7 +89,7 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     @Override
     public void pickupOrder(UUID customerId, UUID orderId) {
         BeerOrder beerOrder = getOrder(customerId, orderId);
-        beerOrder.setOrderStatus(OrderStatusEnum.PICKED_UP);
+        beerOrder.setOrderStatus(BeerOrderStatusEnum.PICKED_UP);
 
         beerOrderRepository.save(beerOrder);
     }
