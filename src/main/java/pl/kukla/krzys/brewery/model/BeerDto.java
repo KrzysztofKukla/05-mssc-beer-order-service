@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.web.model;
+package pl.kukla.krzys.brewery.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;

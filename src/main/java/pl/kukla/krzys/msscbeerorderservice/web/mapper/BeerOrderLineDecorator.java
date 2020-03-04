@@ -2,10 +2,10 @@ package pl.kukla.krzys.msscbeerorderservice.web.mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import pl.kukla.krzys.brewery.model.BeerDto;
+import pl.kukla.krzys.brewery.model.BeerOrderLineDto;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderLine;
 import pl.kukla.krzys.msscbeerorderservice.service.beer.BeerService;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerDto;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderLineDto;
 
 /**
  * @author Krzysztof Kukla

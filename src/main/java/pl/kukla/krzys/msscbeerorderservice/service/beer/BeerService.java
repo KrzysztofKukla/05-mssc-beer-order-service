@@ -1,6 +1,6 @@
 package pl.kukla.krzys.msscbeerorderservice.service.beer;
 
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerDto;
+import pl.kukla.krzys.brewery.model.BeerDto;
 
 import java.util.UUID;
 

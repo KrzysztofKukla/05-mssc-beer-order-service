@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import pl.kukla.krzys.brewery.model.BeerOrderDto;
+import pl.kukla.krzys.brewery.model.BeerOrderPagedList;
 import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderService;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderDto;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderPagedList;
 
 import java.util.UUID;
 

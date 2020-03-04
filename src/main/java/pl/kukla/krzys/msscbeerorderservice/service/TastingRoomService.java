@@ -8,12 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kukla.krzys.brewery.model.BeerOrderDto;
+import pl.kukla.krzys.brewery.model.BeerOrderLineDto;
 import pl.kukla.krzys.msscbeerorderservice.bootstrap.BeerOrderBootstrap;
 import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.repository.CustomerRepository;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderDto;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderLineDto;
 
 import java.util.ArrayList;
 import java.util.List;

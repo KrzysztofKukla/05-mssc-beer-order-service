@@ -11,15 +11,15 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import pl.kukla.krzys.brewery.model.BeerOrderDto;
+import pl.kukla.krzys.brewery.model.BeerOrderPagedList;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
-import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
+import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
 import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.repository.CustomerRepository;
 import pl.kukla.krzys.msscbeerorderservice.web.mapper.BeerOrderMapper;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderDto;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderPagedList;
 
 import java.util.Optional;
 import java.util.UUID;

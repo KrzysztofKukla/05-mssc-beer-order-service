@@ -6,7 +6,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerDto;
+import pl.kukla.krzys.brewery.model.BeerDto;
 
 import java.util.UUID;
 

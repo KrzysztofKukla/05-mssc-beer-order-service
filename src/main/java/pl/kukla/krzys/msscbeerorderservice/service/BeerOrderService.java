@@ -5,8 +5,8 @@ package pl.kukla.krzys.msscbeerorderservice.service;
  */
 
 import org.springframework.data.domain.Pageable;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderDto;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderPagedList;
+import pl.kukla.krzys.brewery.model.BeerOrderDto;
+import pl.kukla.krzys.brewery.model.BeerOrderPagedList;
 
 import java.util.UUID;
 

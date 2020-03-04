@@ -6,8 +6,8 @@ package pl.kukla.krzys.msscbeerorderservice.web.mapper;
 
 import org.mapstruct.DecoratedWith;
 import org.mapstruct.Mapper;
+import pl.kukla.krzys.brewery.model.BeerOrderLineDto;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderLine;
-import pl.kukla.krzys.msscbeerorderservice.web.model.BeerOrderLineDto;
 
 @Mapper(uses = {DateMapper.class})
 @DecoratedWith(value = BeerOrderLineDecorator.class)
