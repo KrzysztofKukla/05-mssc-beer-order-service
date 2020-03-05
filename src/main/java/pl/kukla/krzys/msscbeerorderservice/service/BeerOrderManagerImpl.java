@@ -6,6 +6,7 @@ import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.statemachine.StateMachine;
 import org.springframework.statemachine.config.StateMachineFactory;
 import org.springframework.statemachine.support.DefaultStateMachineContext;
+import org.springframework.statemachine.support.StateMachineInterceptor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
@@ -20,8 +21,10 @@ import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 @RequiredArgsConstructor
 public class BeerOrderManagerImpl implements BeerOrderManager {
 
+    public static final String ORDER_ID_HEADER = "ORDER_ID_HEADER";
     private final StateMachineFactory<BeerOrderStatusEnum, BeerOrderEventEnum> stateMachineFactory;
     private final BeerOrderRepository beerOrderRepository;
+    private final StateMachineInterceptor<BeerOrderStatusEnum, BeerOrderEventEnum> stateMachineInterceptor;
 
     @Transactional
     @Override
@@ -36,7 +39,10 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
     private void sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEvent) {
         StateMachine<BeerOrderStatusEnum, BeerOrderEventEnum> stateMachine = buildStateMachine(beerOrder);
-        Message<BeerOrderEventEnum> beerOrderEventMessage = MessageBuilder.withPayload(beerOrderEvent).build();
+        Message<BeerOrderEventEnum> beerOrderEventMessage = MessageBuilder.withPayload(beerOrderEvent)
+            //here we are enriching (wzbogacamy) this message with orderIdHeader, because it will be needed for us
+            .setHeader(ORDER_ID_HEADER, beerOrder.getId().toString())
+            .build();
         stateMachine.sendEvent(beerOrderEventMessage);
     }
 
@@ -48,6 +54,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         //and then we are setting stateMachine to specific state
         stateMachine.getStateMachineAccessor()
             .doWithAllRegions(stateMachineAccessor -> {
+                stateMachineAccessor.addStateMachineInterceptor(stateMachineInterceptor);
                 stateMachineAccessor.resetStateMachine(new DefaultStateMachineContext<>(beerOrder.getOrderStatus(), null, null,
                     null));
             });
