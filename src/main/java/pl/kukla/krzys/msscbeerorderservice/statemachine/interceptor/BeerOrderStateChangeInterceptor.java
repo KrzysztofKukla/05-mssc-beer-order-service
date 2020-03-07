@@ -20,6 +20,8 @@ import java.util.UUID;
 /**
  * @author Krzysztof Kukla
  */
+
+//interceptor which allows to change logic between state machine changes
 @Component
 @RequiredArgsConstructor
 @Slf4j

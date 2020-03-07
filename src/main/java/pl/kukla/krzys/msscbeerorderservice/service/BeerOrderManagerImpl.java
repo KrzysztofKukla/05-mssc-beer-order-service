@@ -14,9 +14,12 @@ import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 
+import java.util.UUID;
+
 /**
  * @author Krzysztof Kukla
  */
+//it allows to manage different actions that are coming through the system
 @Service
 @RequiredArgsConstructor
 public class BeerOrderManagerImpl implements BeerOrderManager {
@@ -26,6 +29,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
     private final BeerOrderRepository beerOrderRepository;
     private final StateMachineInterceptor<BeerOrderStatusEnum, BeerOrderEventEnum> stateMachineInterceptor;
 
+    //this method will be call when we create new BeerOrder
     @Transactional
     @Override
     public BeerOrder newBeerOrder(BeerOrder beerOrder) {
@@ -35,6 +39,14 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
         sendBeerOrderEvent(savedBeerOrder, BeerOrderEventEnum.VALIDATE_ORDER);
         return savedBeerOrder;
+    }
+
+    @Override
+    public void processValidationResult(UUID beerOrderId, Boolean isValid) {
+        BeerOrder beerOrder = beerOrderRepository.findOneById(beerOrderId);
+        BeerOrderEventEnum beerOrderEvenEnum = isValid ?
+            BeerOrderEventEnum.VALIDATION_PASSED : BeerOrderEventEnum.ALLOCATION_FAILED;
+        sendBeerOrderEvent(beerOrder, beerOrderEvenEnum);
     }
 
     private void sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEvent) {
