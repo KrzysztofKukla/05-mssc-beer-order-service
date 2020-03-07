@@ -20,7 +20,7 @@ import java.util.EnumSet;
 @RequiredArgsConstructor
 public class BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<BeerOrderStatusEnum, BeerOrderEventEnum> {
 
-    private final Action<BeerOrderStatusEnum, BeerOrderEventEnum> validateBeerOrderRequestAction;
+    private final Action<BeerOrderStatusEnum, BeerOrderEventEnum> validateOrderRequestAction;
     private final Action<BeerOrderStatusEnum, BeerOrderEventEnum> allocateOrderAction;
 
     //here we defined all possible states
@@ -42,7 +42,7 @@ public class BeerOrderStateMachineConfig extends StateMachineConfigurerAdapter<B
     public void configure(StateMachineTransitionConfigurer<BeerOrderStatusEnum, BeerOrderEventEnum> transitions) throws Exception {
         transitions
             .withExternal()
-            .source(BeerOrderStatusEnum.NEW).target(BeerOrderStatusEnum.VALIDATION_PENDING).event(BeerOrderEventEnum.VALIDATE_ORDER).action(validateBeerOrderRequestAction)
+            .source(BeerOrderStatusEnum.NEW).target(BeerOrderStatusEnum.VALIDATION_PENDING).event(BeerOrderEventEnum.VALIDATE_ORDER).action(validateOrderRequestAction)
             .and().withExternal()
             .source(BeerOrderStatusEnum.NEW).target(BeerOrderStatusEnum.VALIDATED).event(BeerOrderEventEnum.VALIDATION_PASSED)
             .and().withExternal()
