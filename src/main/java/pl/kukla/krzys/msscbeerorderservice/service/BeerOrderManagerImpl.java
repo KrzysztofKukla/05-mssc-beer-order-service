@@ -43,10 +43,18 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
     @Override
     public void processValidationResult(UUID beerOrderId, Boolean isValid) {
-        BeerOrder beerOrder = beerOrderRepository.findOneById(beerOrderId);
-        BeerOrderEventEnum beerOrderEvenEnum = isValid ?
-            BeerOrderEventEnum.VALIDATION_PASSED : BeerOrderEventEnum.ALLOCATION_FAILED;
-        sendBeerOrderEvent(beerOrder, beerOrderEvenEnum);
+        BeerOrder beerOrder = beerOrderRepository.getOne(beerOrderId);
+        if (isValid) {
+            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_PASSED);
+
+            //when we invoke above 'sendBeerOrderEvent' method above then interceptor is gonna saves it
+            //so if we want to have a fresh object we need to get it from database
+            //this in NOT very expensive, because Hibernate is caching things, so not always hit to database
+            BeerOrder validatedOrder = beerOrderRepository.findOneById(beerOrderId);
+            sendBeerOrderEvent(validatedOrder, BeerOrderEventEnum.ALLOCATE_ORDER);
+        } else {
+            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_FAILED);
+        }
     }
 
     private void sendBeerOrderEvent(BeerOrder beerOrder, BeerOrderEventEnum beerOrderEvent) {
