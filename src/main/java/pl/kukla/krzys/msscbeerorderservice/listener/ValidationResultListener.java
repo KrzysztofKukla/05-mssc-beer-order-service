@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.service.listener;
+package pl.kukla.krzys.msscbeerorderservice.listener;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

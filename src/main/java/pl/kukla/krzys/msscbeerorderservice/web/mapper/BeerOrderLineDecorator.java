@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import pl.kukla.krzys.brewery.model.BeerDto;
 import pl.kukla.krzys.brewery.model.BeerOrderLineDto;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderLine;
-import pl.kukla.krzys.msscbeerorderservice.service.beer.BeerService;
+import pl.kukla.krzys.msscbeerorderservice.restclient.BeerService;
 
 /**
  * @author Krzysztof Kukla

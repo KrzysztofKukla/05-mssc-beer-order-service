@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.service.beer;
+package pl.kukla.krzys.msscbeerorderservice.restclient;
 
 import pl.kukla.krzys.brewery.model.BeerDto;
 

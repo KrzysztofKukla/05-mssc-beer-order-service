@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.service.beer;
+package pl.kukla.krzys.msscbeerorderservice.restclient;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
