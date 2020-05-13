@@ -35,6 +35,8 @@ import java.util.UUID;
 @SpringBootTest
 class BeerOrderManagerImplIT {
 
+    private static final String UPC = "1234";
+
     @Autowired
     private BeerOrderManager beerOrderManager;
 
@@ -76,12 +78,11 @@ class BeerOrderManagerImplIT {
 
     @Test
     void newToAllocate() throws Exception {
-        String upc = "1234";
-        BeerDto beerDto = BeerDto.builder().id(beerId).upc(upc).build();
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
 //        BeerPagedList beerOrderPagedList = new BeerPagedList(Collections.singletonList(beerDto));
 
         wireMockServer.stubFor(
-            WireMock.get(BeerServiceRestTemplate.BEER_PATH_UPC_V1 + "/" + upc)
+            WireMock.get(BeerServiceRestTemplate.BEER_UPC_PATH_V1 + "/" + UPC)
                 .willReturn(WireMock.okJson(objectMapper.writeValueAsString(beerDto)))
         );
 
@@ -102,6 +103,7 @@ class BeerOrderManagerImplIT {
         BeerOrderLine beerOrderLine = BeerOrderLine.builder()
             .beerId(beerId)
             .orderQuantity(1)
+            .upc(UPC)
             .beerOrder(beerOrder)
             .build();
         Set<BeerOrderLine> lines = new HashSet<>();

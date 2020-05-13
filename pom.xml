@@ -20,6 +20,13 @@
 	<description>Beer order service</description>
 
 	<dependencies>
+		<!-- Jms embedded broker needed for integration test
+			 for microservices we need real jms broker-->
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>artemis-jms-server</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<dependency>
 			<groupId>com.github.JensPiegsa</groupId>
 			<artifactId>wiremock-extension</artifactId>

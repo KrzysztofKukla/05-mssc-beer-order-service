@@ -13,7 +13,7 @@ import pl.kukla.krzys.brewery.model.BeerOrderDto;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ValidateBeerOrderRequestEvent {
+public class ValidateOrderRequestEvent {
 
     private BeerOrderDto beerOrderDto;
 

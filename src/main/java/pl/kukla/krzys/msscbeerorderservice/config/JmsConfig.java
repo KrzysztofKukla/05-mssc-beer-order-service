@@ -1,5 +1,6 @@
 package pl.kukla.krzys.msscbeerorderservice.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.support.converter.MappingJackson2MessageConverter;
@@ -23,11 +24,11 @@ public class JmsConfig {
     //and the payload takes Java object and converts to JSON payload
     //conversion between JMS message and from Java Object into serialized JSON into JMS message
     @Bean
-    public MessageConverter messageConverter() {
+    public MessageConverter messageConverter(ObjectMapper objectMapper) {
         MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
         converter.setTypeIdPropertyName("_type");
-
+        converter.setObjectMapper(objectMapper);
         return converter;
     }
 }

@@ -13,6 +13,7 @@ import pl.kukla.krzys.brewery.model.BeerOrderDto;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
+import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundBeerOrderException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 
 import java.util.UUID;
@@ -42,6 +43,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
         return savedBeerOrder;
     }
 
+    @Transactional
     @Override
     public void processValidationResult(UUID beerOrderId, Boolean isValid) {
         BeerOrder beerOrder = beerOrderRepository.getOne(beerOrderId);
@@ -51,7 +53,8 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
             //when we invoke above 'sendBeerOrderEvent' method above then interceptor is gonna saves it
             //so if we want to have a fresh object we need to get it from database
             //this in NOT very expensive, because Hibernate is caching things, so not always hit to database
-            BeerOrder validatedOrder = beerOrderRepository.findOneById(beerOrderId);
+            BeerOrder validatedOrder = beerOrderRepository.findById(beerOrderId)
+                .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderId.toString()));
             sendBeerOrderEvent(validatedOrder, BeerOrderEventEnum.ALLOCATE_ORDER);
         } else {
             sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_FAILED);
