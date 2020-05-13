@@ -2,6 +2,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+	<properties>
+		<wiremock-extension.version>0.4.0</wiremock-extension.version>
+	</properties>
 
 	<parent>
 		<groupId>com.github.sfg-beer-works</groupId>
@@ -14,6 +17,24 @@
 	<version>0.0.1-SNAPSHOT</version>
 
 	<name>05-mssc-beer-order-service</name>
-	<description>Demo project for Spring Boot</description>
+	<description>Beer order service</description>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.github.JensPiegsa</groupId>
+			<artifactId>wiremock-extension</artifactId>
+			<version>${wiremock-extension.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+
+
+	<!-- external repository required for wiremock dependency -->
+	<repositories>
+		<repository>
+			<id>jitpack.io</id>
+			<url>https://jitpack.io</url>
+		</repository>
+	</repositories>
 
 </project>
