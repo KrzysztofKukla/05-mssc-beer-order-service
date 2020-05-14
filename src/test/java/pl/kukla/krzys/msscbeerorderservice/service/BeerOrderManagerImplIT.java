@@ -93,14 +93,13 @@ class BeerOrderManagerImplIT {
         Awaitility.await().untilAsserted(() -> {
             BeerOrder foundBeerOrder = beerOrderRepository.findById(beerOrder.getId()).get();
 
-            //waiting until 'orderStatus' reached ALLOCATION_PENDING
-            Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATION_PENDING, foundBeerOrder.getOrderStatus()); // TODO - ALLOCATED status
+            Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATED, foundBeerOrder.getOrderStatus());
         });
 
 //        Thread.sleep(5000);
 
-        Assertions.assertNotNull(savedBeerOrder);
-        Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATED, savedBeerOrder.getOrderStatus());
+//        Assertions.assertNotNull(savedBeerOrder);
+//        Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATION_PENDING, savedBeerOrder.getOrderStatus());
 
     }
 

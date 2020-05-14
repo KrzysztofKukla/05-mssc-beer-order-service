@@ -11,11 +11,11 @@ import pl.kukla.krzys.msscbeerorderservice.config.JmsConfig;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
-import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundBeerOrderException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.web.mapper.BeerOrderMapper;
 
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -33,13 +33,17 @@ public class AllocateOrderAction implements Action<BeerOrderStatusEnum, BeerOrde
     @Override
     public void execute(StateContext<BeerOrderStatusEnum, BeerOrderEventEnum> stateContext) {
         String beerOrderId = Objects.requireNonNull(stateContext.getMessage().getHeaders().getId()).toString();
-        BeerOrder beerOrder = beerOrderRepository.findById(UUID.fromString(beerOrderId))
-            .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderId.toString()));
-        AllocateOrderRequestEvent allocateOrderRequestEvent = AllocateOrderRequestEvent.builder()
-            .beerOrderDto(beerOrderMapper.beerOrderToDto(beerOrder))
-            .build();
+        Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(UUID.fromString(beerOrderId));
 
-        jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_QUEUE, allocateOrderRequestEvent);
+        beerOrderOptional.ifPresentOrElse(beerOrder -> {
+                AllocateOrderRequestEvent allocateOrderRequestEvent = AllocateOrderRequestEvent.builder()
+                    .beerOrderDto(beerOrderMapper.beerOrderToDto(beerOrder))
+                    .build();
+                log.debug("Sent allocation request for orderId {}", beerOrderId);
+                jmsTemplate.convertAndSend(JmsConfig.ALLOCATE_ORDER_QUEUE, allocateOrderRequestEvent);
+            },
+            () -> log.error("BeerOrder Not found!")
+        );
 
         log.debug("Sent allocation request for beer order id {}", beerOrderId);
     }

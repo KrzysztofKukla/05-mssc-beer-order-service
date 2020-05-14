@@ -25,12 +25,12 @@ public class BeerOrderBootstrap implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        loadCustomerData();
+//        loadCustomerData();
     }
 
     private void loadCustomerData() {
         if (customerRepository.count() == 0) {
-            Customer savedCustomer = customerRepository.save(Customer.builder()
+            Customer savedCustomer = customerRepository.saveAndFlush(Customer.builder()
                 .customerName(TASTING_ROOM)
                 .apiKey(UUID.randomUUID())
                 .build());

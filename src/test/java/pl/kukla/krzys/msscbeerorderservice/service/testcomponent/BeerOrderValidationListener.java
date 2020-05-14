@@ -21,10 +21,10 @@ public class BeerOrderValidationListener {
     private final JmsTemplate jmsTemplate;
 
     @JmsListener(destination = JmsConfig.VALIDATE_ORDER_QUEUE)
-    public void listen(Message message) {
+    public void listen(Message<ValidateOrderRequestEvent> message) {
 
         //Spring is using the Jackson to parse payload into ValidateOrderResultEvent
-        ValidateOrderRequestEvent requestEvent = (ValidateOrderRequestEvent) message.getPayload();
+        ValidateOrderRequestEvent requestEvent = message.getPayload();
 
         ValidateOrderResultEvent resultEvent = ValidateOrderResultEvent.builder()
             .isValid(true)
