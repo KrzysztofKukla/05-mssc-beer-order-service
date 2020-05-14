@@ -96,10 +96,12 @@ class BeerOrderManagerImplIT {
             Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATED, foundBeerOrder.getOrderStatus());
         });
 
-//        Thread.sleep(5000);
-
-//        Assertions.assertNotNull(savedBeerOrder);
-//        Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATION_PENDING, savedBeerOrder.getOrderStatus());
+        Awaitility.await().untilAsserted(() -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+            BeerOrderLine line = foundOrder.getBeerOrderLines().iterator().next();
+            //we want to make sure 'quantityAllocated' has been updated
+            Assertions.assertEquals(line.getOrderQuantity(), line.getQuantityAllocated());
+        });
 
     }
 
