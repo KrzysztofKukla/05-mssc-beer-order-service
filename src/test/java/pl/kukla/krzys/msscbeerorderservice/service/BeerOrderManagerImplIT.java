@@ -6,6 +6,7 @@ import com.github.jenspiegsa.wiremockextension.WireMockExtension;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -88,6 +89,15 @@ class BeerOrderManagerImplIT {
 
         BeerOrder beerOrder = createBeerOrder();
         BeerOrder savedBeerOrder = beerOrderManager.newBeerOrder(beerOrder);
+
+        Awaitility.await().untilAsserted(() -> {
+            BeerOrder foundBeerOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+
+            //waiting until 'orderStatus' reached ALLOCATION_PENDING
+            Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATION_PENDING, foundBeerOrder.getOrderStatus()); // TODO - ALLOCATED status
+        });
+
+//        Thread.sleep(5000);
 
         Assertions.assertNotNull(savedBeerOrder);
         Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATED, savedBeerOrder.getOrderStatus());

@@ -33,6 +33,13 @@
 			<version>${wiremock-extension.version}</version>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- testing utility for integration tests, jms message, pause, wait for condition to happen -->
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<scope>test</scope>
+		</dependency>
 	</dependencies>
 
 
