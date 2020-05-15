@@ -1,5 +1,6 @@
 package pl.kukla.krzys.msscbeerorderservice.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.jenspiegsa.wiremockextension.ManagedWireMockServer;
 import com.github.jenspiegsa.wiremockextension.WireMockExtension;
@@ -108,6 +109,25 @@ class BeerOrderManagerImplIT {
         Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATED, savedBeerOrder2.getOrderStatus());
         savedBeerOrder2.getBeerOrderLines().forEach(line -> {
             Assertions.assertEquals(line.getOrderQuantity(), line.getQuantityAllocated());
+        });
+    }
+
+    @Test
+    void testFailedValidation() throws JsonProcessingException {
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
+
+        wireMockServer.stubFor(WireMock.get(BeerServiceRestTemplate.BEER_UPC_PATH_V1 + "/" + UPC)
+            .willReturn(WireMock.okJson(objectMapper.writeValueAsString(beerDto))));
+
+        BeerOrder beerOrder = createBeerOrder();
+        beerOrder.setCustomerRef("fail-validation");
+
+        beerOrderManager.newBeerOrder(beerOrder);
+
+        Awaitility.await().untilAsserted(() -> {
+            BeerOrder foundOrder = beerOrderRepository.findById(beerOrder.getId()).get();
+
+            Assertions.assertEquals(BeerOrderStatusEnum.VALIDATION_EXCEPTION, foundOrder.getOrderStatus());
         });
     }
 
