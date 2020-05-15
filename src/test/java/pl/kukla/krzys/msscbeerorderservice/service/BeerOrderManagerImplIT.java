@@ -16,7 +16,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
+import org.springframework.jms.core.JmsTemplate;
 import pl.kukla.krzys.brewery.model.BeerDto;
+import pl.kukla.krzys.brewery.model.event.AllocationFailureEvent;
+import pl.kukla.krzys.msscbeerorderservice.config.JmsConfig;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderLine;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
@@ -53,6 +56,9 @@ class BeerOrderManagerImplIT {
 
     @Autowired
     private ObjectMapper objectMapper;
+
+    @Autowired
+    private JmsTemplate jmsTemplate;
 
     private Customer testCustomer;
 
@@ -163,7 +169,7 @@ class BeerOrderManagerImplIT {
 
     @Test
     void testAllocationFailure() throws JsonProcessingException {
-        BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
 
         wireMockServer.stubFor(WireMock.get(BeerServiceRestTemplate.BEER_UPC_PATH_V1 + "/" + UPC)
             .willReturn(WireMock.okJson(objectMapper.writeValueAsString(beerDto))));
@@ -178,15 +184,15 @@ class BeerOrderManagerImplIT {
             Assertions.assertEquals(BeerOrderStatusEnum.ALLOCATION_EXCEPTION, foundOrder.getOrderStatus());
         });
 
-//        AllocationFailureEvent allocationFailureEvent = (AllocationFailureEvent) jmsTemplate.receiveAndConvert(JmsConfig.ALLOCATE_FAILURE_QUEUE);
-//
-//        Assertions.assertNotNull(allocationFailureEvent);
-//        org.assertj.core.api.Assertions.assertThat(allocationFailureEvent.getOrderId()).isEqualTo(savedBeerOrder.getId());
+        AllocationFailureEvent allocationFailureEvent = (AllocationFailureEvent) jmsTemplate.receiveAndConvert(JmsConfig.ALLOCATE_FAILURE_QUEUE);
+
+        Assertions.assertNotNull(allocationFailureEvent);
+        org.assertj.core.api.Assertions.assertThat(allocationFailureEvent.getOrderId()).isEqualTo(savedBeerOrder.getId());
     }
 
     @Test
     void testPartialAllocation() throws JsonProcessingException {
-        BeerDto beerDto = BeerDto.builder().id(beerId).upc("12345").build();
+        BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
 
         wireMockServer.stubFor(WireMock.get(BeerServiceRestTemplate.BEER_UPC_PATH_V1 + "/" + UPC)
             .willReturn(WireMock.okJson(objectMapper.writeValueAsString(beerDto))));
