@@ -22,12 +22,14 @@ public class BeerOrderAllocationListener {
 
     @JmsListener(destination = JmsConfig.ALLOCATE_ORDER_QUEUE)
     public void listen(Message<AllocateOrderRequestEvent> message) {
+        log.debug("Listening on {} queue", JmsConfig.ALLOCATE_ORDER_QUEUE.toString());
+
         AllocateOrderRequestEvent allocateOrderRequest = message.getPayload();
 
         boolean pendingInventory = allocateOrderRequest.getBeerOrderDto().getCustomerRef() != null
             && allocateOrderRequest.getBeerOrderDto().getCustomerRef().equals("partial-allocation");
 
-        boolean allocationError = allocateOrderRequest.getBeerOrderDto().getCustomerRef() == null
+        boolean allocationError = allocateOrderRequest.getBeerOrderDto().getCustomerRef() != null
             && allocateOrderRequest.getBeerOrderDto().getCustomerRef().equals("fail-allocation");
 
         allocateOrderRequest.getBeerOrderDto().getBeerOrderLines().forEach(beerOrderLineDto -> {

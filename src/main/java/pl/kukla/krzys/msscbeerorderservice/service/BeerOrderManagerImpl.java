@@ -51,7 +51,8 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
     @Transactional
     @Override
     public void processValidationResult(UUID beerOrderId, Boolean isValid) {
-        BeerOrder beerOrder = beerOrderRepository.getOne(beerOrderId);
+        BeerOrder beerOrder = beerOrderRepository.findById(beerOrderId)
+            .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderId.toString()));
         if (isValid) {
             sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_PASSED);
 
@@ -102,7 +103,8 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
     }
 
     private void getBeerOrderAndSendEvent(BeerOrderDto beerOrderDto, BeerOrderEventEnum beerOrderEventEnum) {
-        BeerOrder beerOrder = beerOrderRepository.getOne(beerOrderDto.getId());
+        BeerOrder beerOrder = beerOrderRepository.findById(beerOrderDto.getId())
+            .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderDto.getId().toString()));
         sendBeerOrderEvent(beerOrder, beerOrderEventEnum);
     }
 

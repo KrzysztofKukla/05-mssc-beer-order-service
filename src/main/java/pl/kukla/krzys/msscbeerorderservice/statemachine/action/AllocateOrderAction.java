@@ -12,6 +12,7 @@ import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
+import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManagerImpl;
 import pl.kukla.krzys.msscbeerorderservice.web.mapper.BeerOrderMapper;
 
 import java.util.Objects;
@@ -32,7 +33,8 @@ public class AllocateOrderAction implements Action<BeerOrderStatusEnum, BeerOrde
 
     @Override
     public void execute(StateContext<BeerOrderStatusEnum, BeerOrderEventEnum> stateContext) {
-        String beerOrderId = Objects.requireNonNull(stateContext.getMessage().getHeaders().getId()).toString();
+        String beerOrderId = Objects.requireNonNull(stateContext.getMessage().getHeaders().get(BeerOrderManagerImpl.ORDER_ID_HEADER)).toString();
+//        String beerOrderId = Objects.requireNonNull(stateContext.getMessage().getHeaders().getId()).toString();
         Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(UUID.fromString(beerOrderId));
 
         beerOrderOptional.ifPresentOrElse(beerOrder -> {
