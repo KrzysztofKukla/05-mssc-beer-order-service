@@ -14,7 +14,7 @@ import pl.kukla.krzys.brewery.model.BeerOrderDto;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
-import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundBeerOrderException;
+import pl.kukla.krzys.msscbeerorderservice.exception.BeerOrderNotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 
 import java.util.Optional;
@@ -52,7 +52,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
     @Override
     public void processValidationResult(UUID beerOrderId, Boolean isValid) {
         BeerOrder beerOrder = beerOrderRepository.findById(beerOrderId)
-            .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderId.toString()));
+            .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId.toString()));
         if (isValid) {
             sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_PASSED);
 
@@ -63,7 +63,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
             //so if we want to have a fresh object we need to get it from database
             //this in NOT very expensive, because Hibernate is caching things, so not always hit to database
             BeerOrder validatedOrder = beerOrderRepository.findById(beerOrderId)
-                .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderId.toString()));
+                .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId.toString()));
             sendBeerOrderEvent(validatedOrder, BeerOrderEventEnum.ALLOCATE_ORDER);
         } else {
             sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_FAILED);
@@ -104,7 +104,7 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
 
     private void getBeerOrderAndSendEvent(BeerOrderDto beerOrderDto, BeerOrderEventEnum beerOrderEventEnum) {
         BeerOrder beerOrder = beerOrderRepository.findById(beerOrderDto.getId())
-            .orElseThrow(() -> new NotFoundBeerOrderException(beerOrderDto.getId().toString()));
+            .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderDto.getId().toString()));
         sendBeerOrderEvent(beerOrder, beerOrderEventEnum);
     }
 

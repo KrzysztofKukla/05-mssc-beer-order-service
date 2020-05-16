@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
-import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundBeerOrderException;
+import pl.kukla.krzys.msscbeerorderservice.exception.BeerOrderNotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManagerImpl;
 
@@ -43,7 +43,7 @@ public class BeerOrderStateChangeInterceptor extends StateMachineInterceptorAdap
                 //whenever state in state machine is changing then we are setting orderState for orderBeer ( getting by orderId )
                 // and persist/save to database
                 BeerOrder beerOrder = beerOrderRepository.findById(UUID.fromString(orderId))
-                    .orElseThrow(() -> new NotFoundBeerOrderException(orderId));
+                    .orElseThrow(() -> new BeerOrderNotFoundException(orderId));
                 beerOrder.setOrderStatus(state.getId());
                 beerOrderRepository.saveAndFlush(beerOrder);
             });

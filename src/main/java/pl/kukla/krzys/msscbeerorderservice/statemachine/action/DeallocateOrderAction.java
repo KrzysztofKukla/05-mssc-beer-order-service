@@ -6,7 +6,8 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.statemachine.StateContext;
 import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
-import pl.kukla.krzys.brewery.model.event.ValidateOrderRequestEvent;
+import pl.kukla.krzys.brewery.model.BeerOrderDto;
+import pl.kukla.krzys.brewery.model.event.DeallocateOrderRequestEvent;
 import pl.kukla.krzys.msscbeerorderservice.config.JmsConfig;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrder;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
@@ -25,22 +26,28 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 @Slf4j
-public class ValidateOrderRequestAction implements Action<BeerOrderStatusEnum, BeerOrderEventEnum> {
-    private final JmsTemplate jmsTemplate;
+public class DeallocateOrderAction implements Action<BeerOrderStatusEnum, BeerOrderEventEnum> {
+
     private final BeerOrderRepository beerOrderRepository;
     private final BeerOrderMapper beerOrderMapper;
+    private final JmsTemplate jmsTemplate;
 
     @Override
     public void execute(StateContext<BeerOrderStatusEnum, BeerOrderEventEnum> stateContext) {
+
         String beerOrderId = Objects.requireNonNull(stateContext.getMessage().getHeaders().get(BeerOrderManagerImpl.ORDER_ID_HEADER)).toString();
         BeerOrder beerOrder = beerOrderRepository.findById(UUID.fromString(beerOrderId))
-            .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId.toString()));
-        ValidateOrderRequestEvent validateOrderRequestEvent = ValidateOrderRequestEvent.builder()
-            .beerOrderDto(beerOrderMapper.beerOrderToDto(beerOrder))
-            .build();
-        jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_QUEUE, validateOrderRequestEvent);
+            .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId));
 
-        log.debug("Sent validation request to queue for orderI-> {}", beerOrderId);
+        BeerOrderDto beerOrderDto = beerOrderMapper.beerOrderToDto(beerOrder);
+
+        DeallocateOrderRequestEvent deallocateOrderRequestEvent = DeallocateOrderRequestEvent.builder()
+            .beerOrderDto(beerOrderDto)
+            .build();
+
+        jmsTemplate.convertAndSend(JmsConfig.DEALLOCATE_ORDER_QUEUE, deallocateOrderRequestEvent);
+
+        log.debug("Deallocate order request sent for beerOrderId {}", beerOrderDto);
     }
 
 }

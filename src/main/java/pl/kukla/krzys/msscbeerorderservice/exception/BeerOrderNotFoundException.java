@@ -6,7 +6,7 @@ import lombok.RequiredArgsConstructor;
  * @author Krzysztof Kukla
  */
 @RequiredArgsConstructor
-public class NotFoundBeerOrderException extends RuntimeException {
+public class BeerOrderNotFoundException extends RuntimeException {
     private final String message;
 
 }

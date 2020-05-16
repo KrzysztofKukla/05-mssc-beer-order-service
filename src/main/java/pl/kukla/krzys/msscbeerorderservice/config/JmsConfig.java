@@ -20,6 +20,7 @@ public class JmsConfig {
     public static final String ALLOCATE_ORDER_QUEUE = "allocate-order-queue";
     public static final String ALLOCATE_ORDER_RESPONSE_QUEUE = "allocate-order-response-queue";
     public static final String ALLOCATE_FAILURE_QUEUE = "allocation-failure-queue";
+    public static final String DEALLOCATE_ORDER_QUEUE = "deallocate-order-queue";
 
     //when we send the message to JMS, Spring converts that message to JMS text message
     //and the payload takes Java object and converts to JSON payload
