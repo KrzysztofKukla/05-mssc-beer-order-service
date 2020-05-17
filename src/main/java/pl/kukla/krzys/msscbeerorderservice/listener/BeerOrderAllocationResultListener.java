@@ -30,7 +30,7 @@ public class BeerOrderAllocationResultListener {
             beerOrderManager.beerOrderAllocationPendingInventory(beerOrderDto);
         } else if (allocateOrderResultEvent.getAllocationError()) {
             //allocate errors
-            beerOrderManager.beerOrderAllocationFailed(beerOrderDto);
+            beerOrderManager.beerOrderAllocationFailed(beerOrderDto.getId());
         }
     }
 

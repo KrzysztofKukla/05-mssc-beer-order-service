@@ -26,16 +26,21 @@ public class BeerOrderValidationListener {
         //Spring is using the Jackson to parse payload into ValidateOrderResultEvent
         ValidateOrderRequestEvent requestEvent = message.getPayload();
 
-        //condtion to fail validation
+        //condition to fail validation
         boolean valid = requestEvent.getBeerOrderDto().getCustomerRef() == null
             || !requestEvent.getBeerOrderDto().getCustomerRef().equals("fail-validation");
 
-        ValidateOrderResultEvent resultEvent = ValidateOrderResultEvent.builder()
-            .isValid(valid)
-            .orderId(requestEvent.getBeerOrderDto().getId())
-            .build();
+        boolean sendResponse = requestEvent.getBeerOrderDto().getCustomerRef() == null
+            || !requestEvent.getBeerOrderDto().getCustomerRef().equals("dont-validate");
 
-        jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE, resultEvent);
+        if (sendResponse) {
+            ValidateOrderResultEvent resultEvent = ValidateOrderResultEvent.builder()
+                .isValid(valid)
+                .orderId(requestEvent.getBeerOrderDto().getId())
+                .build();
+
+            jmsTemplate.convertAndSend(JmsConfig.VALIDATE_ORDER_RESPONSE_QUEUE, resultEvent);
+        }
     }
 
 }

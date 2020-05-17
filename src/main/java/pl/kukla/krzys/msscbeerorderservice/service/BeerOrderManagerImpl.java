@@ -51,60 +51,54 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
     @Transactional
     @Override
     public void processValidationResult(UUID beerOrderId, Boolean isValid) {
-        BeerOrder beerOrder = beerOrderRepository.findById(beerOrderId)
-            .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId.toString()));
         if (isValid) {
-            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_PASSED);
+            getBeerOrderAndSendEvent(beerOrderId, BeerOrderEventEnum.VALIDATION_PASSED);
 
             //wait for status change
             awaitForStatus(beerOrderId, BeerOrderStatusEnum.VALIDATED);
 
-            //when we invoke above 'sendBeerOrderEvent' method above then interceptor is gonna saves it
-            //so if we want to have a fresh object we need to get it from database
+            //when we invoke above 'getBeerOrderAndSendEvent' method above then interceptor is gonna saves it
+            //so if we want to have a fresh object we need to call to database again and get it
             //this in NOT very expensive, because Hibernate is caching things, so not always hit to database
             BeerOrder validatedOrder = beerOrderRepository.findById(beerOrderId)
                 .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId.toString()));
             sendBeerOrderEvent(validatedOrder, BeerOrderEventEnum.ALLOCATE_ORDER);
         } else {
-            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.VALIDATION_FAILED);
+            getBeerOrderAndSendEvent(beerOrderId, BeerOrderEventEnum.VALIDATION_FAILED);
         }
     }
 
     @Override
     public void beerOrderAllocationPassed(BeerOrderDto beerOrderDto) {
-        Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(beerOrderDto.getId());
-
-        beerOrderOptional.ifPresentOrElse(beerOrder -> {
-            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.ALLOCATION_SUCCESS);
-            awaitForStatus(beerOrder.getId(), BeerOrderStatusEnum.ALLOCATED);
-            updateAllocatedQty(beerOrderDto);
-        }, () -> log.error("Order Id Not Found: " + beerOrderDto.getId()));
-    }
-
-    @Override
-    public void beerOrderAllocationPendingInventory(BeerOrderDto beerOrderDto) {
-        getBeerOrderAndSendEvent(beerOrderDto, BeerOrderEventEnum.ALLOCATION_NO_INVENTORY);
+        getBeerOrderAndSendEvent(beerOrderDto.getId(), BeerOrderEventEnum.ALLOCATION_SUCCESS);
+        awaitForStatus(beerOrderDto.getId(), BeerOrderStatusEnum.ALLOCATED);
         updateAllocatedQty(beerOrderDto);
     }
 
     @Override
-    public void beerOrderAllocationFailed(BeerOrderDto beerOrderDto) {
-        getBeerOrderAndSendEvent(beerOrderDto, BeerOrderEventEnum.ALLOCATION_FAILED);
+    public void beerOrderAllocationPendingInventory(BeerOrderDto beerOrderDto) {
+        getBeerOrderAndSendEvent(beerOrderDto.getId(), BeerOrderEventEnum.ALLOCATION_NO_INVENTORY);
+        updateAllocatedQty(beerOrderDto);
+    }
+
+    @Override
+    public void beerOrderAllocationFailed(UUID id) {
+        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.ALLOCATION_FAILED);
     }
 
     @Override
     public void beerOrderPickedUp(UUID id) {
-        Optional<BeerOrder> beerOrderOptional = beerOrderRepository.findById(id);
-
-        beerOrderOptional.ifPresentOrElse(beerOrder -> {
-            //do process
-            sendBeerOrderEvent(beerOrder, BeerOrderEventEnum.BEER_ORDER_PICKED_UP);
-        }, () -> log.error("Order Not Found. Id: " + id));
+        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.BEER_ORDER_PICKED_UP);
     }
 
-    private void getBeerOrderAndSendEvent(BeerOrderDto beerOrderDto, BeerOrderEventEnum beerOrderEventEnum) {
-        BeerOrder beerOrder = beerOrderRepository.findById(beerOrderDto.getId())
-            .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderDto.getId().toString()));
+    @Override
+    public void cancelOrder(UUID id) {
+        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.CANCEL_ORDER);
+    }
+
+    private void getBeerOrderAndSendEvent(UUID id, BeerOrderEventEnum beerOrderEventEnum) {
+        BeerOrder beerOrder = beerOrderRepository.findById(id)
+            .orElseThrow(() -> new BeerOrderNotFoundException(id.toString()));
         sendBeerOrderEvent(beerOrder, beerOrderEventEnum);
     }
 
