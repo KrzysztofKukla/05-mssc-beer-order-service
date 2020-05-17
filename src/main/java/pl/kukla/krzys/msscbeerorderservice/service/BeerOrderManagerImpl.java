@@ -52,10 +52,10 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
     @Override
     public void processValidationResult(UUID beerOrderId, Boolean isValid) {
         if (isValid) {
-            getBeerOrderAndSendEvent(beerOrderId, BeerOrderEventEnum.VALIDATION_PASSED);
+            getBeerOrderAndSendEvent(beerOrderId, BeerOrderEventEnum.VALIDATION_PASSED, BeerOrderStatusEnum.VALIDATED);
 
             //wait for status change
-            awaitForStatus(beerOrderId, BeerOrderStatusEnum.VALIDATED);
+//            awaitForStatus(beerOrderId, BeerOrderStatusEnum.VALIDATED);
 
             //when we invoke above 'getBeerOrderAndSendEvent' method above then interceptor is gonna saves it
             //so if we want to have a fresh object we need to call to database again and get it
@@ -64,41 +64,41 @@ public class BeerOrderManagerImpl implements BeerOrderManager {
                 .orElseThrow(() -> new BeerOrderNotFoundException(beerOrderId.toString()));
             sendBeerOrderEvent(validatedOrder, BeerOrderEventEnum.ALLOCATE_ORDER);
         } else {
-            getBeerOrderAndSendEvent(beerOrderId, BeerOrderEventEnum.VALIDATION_FAILED);
+            getBeerOrderAndSendEvent(beerOrderId, BeerOrderEventEnum.VALIDATION_FAILED, null);
         }
     }
 
     @Override
     public void beerOrderAllocationPassed(BeerOrderDto beerOrderDto) {
-        getBeerOrderAndSendEvent(beerOrderDto.getId(), BeerOrderEventEnum.ALLOCATION_SUCCESS);
-        awaitForStatus(beerOrderDto.getId(), BeerOrderStatusEnum.ALLOCATED);
+        getBeerOrderAndSendEvent(beerOrderDto.getId(), BeerOrderEventEnum.ALLOCATION_SUCCESS, BeerOrderStatusEnum.ALLOCATED);
         updateAllocatedQty(beerOrderDto);
     }
 
     @Override
     public void beerOrderAllocationPendingInventory(BeerOrderDto beerOrderDto) {
-        getBeerOrderAndSendEvent(beerOrderDto.getId(), BeerOrderEventEnum.ALLOCATION_NO_INVENTORY);
+        getBeerOrderAndSendEvent(beerOrderDto.getId(), BeerOrderEventEnum.ALLOCATION_NO_INVENTORY, BeerOrderStatusEnum.PENDING_INVENTORY);
         updateAllocatedQty(beerOrderDto);
     }
 
     @Override
     public void beerOrderAllocationFailed(UUID id) {
-        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.ALLOCATION_FAILED);
+        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.ALLOCATION_FAILED, null);
     }
 
     @Override
     public void beerOrderPickedUp(UUID id) {
-        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.BEER_ORDER_PICKED_UP);
+        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.BEER_ORDER_PICKED_UP, null);
     }
 
     @Override
     public void cancelOrder(UUID id) {
-        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.CANCEL_ORDER);
+        getBeerOrderAndSendEvent(id, BeerOrderEventEnum.CANCEL_ORDER, BeerOrderStatusEnum.ALLOCATED);
     }
 
-    private void getBeerOrderAndSendEvent(UUID id, BeerOrderEventEnum beerOrderEventEnum) {
+    private void getBeerOrderAndSendEvent(UUID id, BeerOrderEventEnum beerOrderEventEnum, BeerOrderStatusEnum awaitingStatus) {
         BeerOrder beerOrder = beerOrderRepository.findById(id)
             .orElseThrow(() -> new BeerOrderNotFoundException(id.toString()));
+        if (awaitingStatus != null) awaitForStatus(id, awaitingStatus);
         sendBeerOrderEvent(beerOrder, beerOrderEventEnum);
     }
 

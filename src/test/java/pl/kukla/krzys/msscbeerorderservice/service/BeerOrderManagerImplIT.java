@@ -260,7 +260,7 @@ class BeerOrderManagerImplIT {
         });
     }
 
-    @Disabled("entityManager.flush() needed on processValidationResult() method")
+    @Disabled("awaitForStatus() method should be called to be able run this test")
     @Test
     void allocatedToCancel() throws Exception {
         BeerDto beerDto = BeerDto.builder().id(beerId).upc(UPC).build();
