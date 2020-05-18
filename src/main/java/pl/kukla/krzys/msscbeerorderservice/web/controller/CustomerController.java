@@ -3,6 +3,8 @@ package pl.kukla.krzys.msscbeerorderservice.web.controller;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import pl.kukla.krzys.brewery.model.CustomerPagedList;
@@ -12,6 +14,7 @@ import pl.kukla.krzys.msscbeerorderservice.service.CustomerService;
  * @author Krzysztof Kukla
  */
 @RestController
+@RequestMapping("/api/v1/customers")
 @RequiredArgsConstructor
 @Slf4j
 public class CustomerController {
@@ -21,6 +24,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
+    @GetMapping
     public CustomerPagedList listCustomer(@RequestParam(value = "pageNumber", required = false) Integer pageNumber,
                                           @RequestParam(value = "pageSize", required = false) Integer pageSize) {
         pageNumber = pageNumber == null || pageNumber < 0 ?
