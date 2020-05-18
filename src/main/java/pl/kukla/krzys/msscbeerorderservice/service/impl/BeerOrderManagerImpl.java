@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.service;
+package pl.kukla.krzys.msscbeerorderservice.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -16,6 +16,7 @@ import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
 import pl.kukla.krzys.msscbeerorderservice.exception.BeerOrderNotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
+import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManager;
 
 import java.util.Optional;
 import java.util.UUID;

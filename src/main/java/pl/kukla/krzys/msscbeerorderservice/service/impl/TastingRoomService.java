@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.service;
+package pl.kukla.krzys.msscbeerorderservice.service.impl;
 
 /**
  * @author Krzysztof Kukla
@@ -14,6 +14,7 @@ import pl.kukla.krzys.msscbeerorderservice.bootstrap.BeerOrderBootstrap;
 import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.repository.CustomerRepository;
+import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderService;
 
 import java.util.ArrayList;
 import java.util.List;

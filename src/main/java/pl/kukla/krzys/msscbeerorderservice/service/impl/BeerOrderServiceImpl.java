@@ -1,4 +1,4 @@
-package pl.kukla.krzys.msscbeerorderservice.service;
+package pl.kukla.krzys.msscbeerorderservice.service.impl;
 
 /**
  * @author Krzysztof Kukla
@@ -19,6 +19,8 @@ import pl.kukla.krzys.msscbeerorderservice.domain.Customer;
 import pl.kukla.krzys.msscbeerorderservice.exception.NotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
 import pl.kukla.krzys.msscbeerorderservice.repository.CustomerRepository;
+import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManager;
+import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderService;
 import pl.kukla.krzys.msscbeerorderservice.web.mapper.BeerOrderMapper;
 
 import java.util.Optional;
@@ -34,7 +36,6 @@ public class BeerOrderServiceImpl implements BeerOrderService {
     private final CustomerRepository customerRepository;
     private final BeerOrderMapper beerOrderMapper;
     private final BeerOrderManager beerOrderManager;
-
 
     @Override
     public BeerOrderPagedList listOrders(UUID customerId, Pageable pageable) {

@@ -14,7 +14,7 @@ import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
 import pl.kukla.krzys.msscbeerorderservice.exception.BeerOrderNotFoundException;
 import pl.kukla.krzys.msscbeerorderservice.repository.BeerOrderRepository;
-import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManagerImpl;
+import pl.kukla.krzys.msscbeerorderservice.service.impl.BeerOrderManagerImpl;
 
 import java.util.Optional;
 import java.util.UUID;

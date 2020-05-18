@@ -10,7 +10,7 @@ import pl.kukla.krzys.brewery.model.event.AllocationFailureEvent;
 import pl.kukla.krzys.msscbeerorderservice.config.JmsConfig;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
-import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManagerImpl;
+import pl.kukla.krzys.msscbeerorderservice.service.impl.BeerOrderManagerImpl;
 
 import java.util.Objects;
 import java.util.UUID;

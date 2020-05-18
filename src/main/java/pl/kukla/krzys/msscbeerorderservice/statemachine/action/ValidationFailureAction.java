@@ -7,7 +7,7 @@ import org.springframework.statemachine.action.Action;
 import org.springframework.stereotype.Component;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderEventEnum;
 import pl.kukla.krzys.msscbeerorderservice.domain.BeerOrderStatusEnum;
-import pl.kukla.krzys.msscbeerorderservice.service.BeerOrderManagerImpl;
+import pl.kukla.krzys.msscbeerorderservice.service.impl.BeerOrderManagerImpl;
 
 import java.util.Objects;
 
