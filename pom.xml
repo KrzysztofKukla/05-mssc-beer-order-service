@@ -1,54 +1,58 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<properties>
-		<wiremock-extension.version>0.4.0</wiremock-extension.version>
-	</properties>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <wiremock-extension.version>0.4.0</wiremock-extension.version>
+    </properties>
 
-	<parent>
-		<groupId>com.github.sfg-beer-works</groupId>
-		<artifactId>sfg-brewery-bom</artifactId>
-		<version>1.0.11</version>
-	</parent>
+    <parent>
+        <groupId>com.github.sfg-beer-works</groupId>
+        <artifactId>sfg-brewery-bom</artifactId>
+        <version>1.0.11</version>
+    </parent>
 
-	<groupId>pl.kukla.krzys</groupId>
-	<artifactId>05-mssc-beer-order-service</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+    <groupId>pl.kukla.krzys</groupId>
+    <artifactId>05-mssc-beer-order-service</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
 
-	<name>05-mssc-beer-order-service</name>
-	<description>Beer order service</description>
+    <name>05-mssc-beer-order-service</name>
+    <description>Beer order service</description>
 
-	<dependencies>
-		<!-- Jms embedded broker needed for integration test
-			 for microservices we need real jms broker-->
-		<dependency>
-			<groupId>org.apache.activemq</groupId>
-			<artifactId>artemis-jms-server</artifactId>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.github.JensPiegsa</groupId>
-			<artifactId>wiremock-extension</artifactId>
-			<version>${wiremock-extension.version}</version>
-			<scope>test</scope>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <!-- Jms embedded broker needed for integration test
+             for microservices we need real jms broker-->
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>artemis-jms-server</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.JensPiegsa</groupId>
+            <artifactId>wiremock-extension</artifactId>
+            <version>${wiremock-extension.version}</version>
+            <scope>test</scope>
+        </dependency>
 
-		<!-- testing utility for integration tests, jms message, pause, wait for condition to happen -->
-		<dependency>
-			<groupId>org.awaitility</groupId>
-			<artifactId>awaitility</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <!-- testing utility for integration tests, jms message, pause, wait for condition to happen -->
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
 
-	<!-- external repository required for wiremock dependency -->
-	<repositories>
-		<repository>
-			<id>jitpack.io</id>
-			<url>https://jitpack.io</url>
-		</repository>
-	</repositories>
+    <!-- external repository required for wiremock dependency -->
+    <repositories>
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
 
 </project>

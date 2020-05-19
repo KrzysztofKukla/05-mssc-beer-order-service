@@ -1,0 +1,25 @@
+spring:
+  application:
+    name: micro-05-mssc-beer-order-service
+  #jms properties
+  artemis:
+    user: artemis
+    password: simetraehcapa
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+      write-date-timestamps-as-nanoseconds: true
+
+logging:
+  level:
+    root: WARN
+    pl:
+      kukla:
+        krzys: DEBUG
+
+server:
+  port: 8081
+
+sfg:
+  brewery:
+    beer-service-host: http://localhost:8080
