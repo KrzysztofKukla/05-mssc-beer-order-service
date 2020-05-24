@@ -2,9 +2,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <properties>
-        <wiremock-extension.version>0.4.0</wiremock-extension.version>
-    </properties>
 
     <parent>
         <groupId>com.github.sfg-beer-works</groupId>
@@ -19,6 +16,11 @@
     <name>micro-05-mssc-beer-order-service</name>
     <description>Beer order service</description>
 
+    <properties>
+        <wiremock-extension.version>0.4.0</wiremock-extension.version>
+        <logstash-logback-encoder.version>6.3</logstash-logback-encoder.version>
+    </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
@@ -29,6 +31,21 @@
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
+
+        <!-- Spring Cloud Sleuth/Zipkin for Distributing tracing Server -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zipkin</artifactId>
+        </dependency>
+
+        <!-- logstash allows to grab ( chwytać ) logfiles and move them to logging server -->
+        <!-- in this case used to JSON encoding -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash-logback-encoder.version}</version>
+        </dependency>
+
         <!-- Jms embedded broker needed for integration test
              for microservices we need real jms broker-->
         <dependency>
