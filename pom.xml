@@ -16,13 +16,18 @@
     <artifactId>05-mssc-beer-order-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>05-mssc-beer-order-service</name>
+    <name>micro-05-mssc-beer-order-service</name>
     <description>Beer order service</description>
 
     <dependencies>
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+        </dependency>
+        <!-- to get configuration from Spring Cloud Config -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
         <!-- Jms embedded broker needed for integration test
              for microservices we need real jms broker-->

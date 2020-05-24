@@ -1,0 +1,11 @@
+#bootstrap works like application.yml, is used to fetch configuration from Spring Cloud Config,
+#bootstrap is loaded before application.yml and used to find environment
+spring:
+  cloud:
+    discovery:
+      #register beerOrder into Eureka for 'local-discovery' profile
+      enabled: true
+    config:
+      discovery:
+        #here we define spring.application.name of config-sever where 'beerOrder' is fetching config application.yml from
+        service-id: micro-13-mssc-config-server
