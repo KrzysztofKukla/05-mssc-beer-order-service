@@ -9,9 +9,9 @@ spring:
     serialization:
       write-dates-as-timestamps: false
       write-date-timestamps-as-nanoseconds: true
-  #distributed tracing server
+  #disable distributed tracing server ( dont want to send log into Zipkin )
   zipkin:
-    baseUrl: http://localhost:9411
+    enabled: false
 
 logging:
   level:
